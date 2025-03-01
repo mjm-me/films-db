@@ -1,0 +1,13 @@
+import { Router } from 'express';
+import createDebug from 'debug';
+const debug = createDebug('films:router:films');
+export const createFilmsRouter = (filmsController) => {
+    debug('Ejecutando createFilmsRouter');
+    const filmsRouter = Router();
+    filmsRouter.get('/', filmsController.getAll);
+    filmsRouter.get('/:id', filmsController.getById);
+    filmsRouter.post('/', filmsController.create);
+    filmsRouter.patch('/:id', filmsController.update);
+    filmsRouter.delete('/:id', filmsController.delete);
+    return filmsRouter;
+};
