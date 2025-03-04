@@ -3,6 +3,8 @@ import { Film } from '@prisma/client';
 import { Repository } from '../repo/repository.type.js';
 import { AppResponse } from '../types/app-response';
 import createDebug from 'debug';
+import { FilmCreateDTO } from '../dto/films.dto.js';
+
 const debug = createDebug('films:controllers:films');
 
 export class FilmsController {
@@ -44,7 +46,7 @@ export class FilmsController {
         try {
             FilmCreateDTO.parse(req.body);
 
-            const newData = req.body;
+            const newData: FilmCreateDTO = req.body;
             const film = await this.repoFilms.create(newData);
             res.json(this.makeResponse([film]));
         } catch (error) {
@@ -57,6 +59,7 @@ export class FilmsController {
         try {
             const { id } = req.params;
             const newData = req.body;
+            FilmCreateDTO.partial().parse(req.body);
             const film = await this.repoFilms.update(id, newData);
             res.json(this.makeResponse([film]));
         } catch (error) {
