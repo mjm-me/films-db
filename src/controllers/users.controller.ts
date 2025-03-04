@@ -5,6 +5,7 @@ import { UsersRepo, UserWithoutPasswd } from '../repo/users.repository.js';
 import { AuthService } from '../services/auth.service.js';
 import { HttpError } from '../types/http-error.js';
 const debug = createDebug('films:controllers:users');
+import { UserCreateDTO, UserLoginDTO } from '../dto/users.dto.js';
 
 export class UsersController {
     constructor(private repoFilms: UsersRepo) {
@@ -23,8 +24,9 @@ export class UsersController {
         debug('create');
         try {
             const newData = req.body;
+            UserCreateDTO.parse(newData);
             newData.password = await AuthService.hashPassword(newData.password);
-            const user = await this.repoFilms.create(newData);
+            const user = await this.repoUsers.create(newData);
             res.json(this.makeResponse([user]));
         } catch (error) {
             next(error);
@@ -41,10 +43,12 @@ export class UsersController {
         try {
             const { email, password: clientPassword } = req.body;
 
-            const user = await this.repoFilms.getByEmail(email);
-            if (user === null) {
-                throw error;
-            }
+            UserLoginDTO.parse({ email, password: clientPassword });
+
+            const user = await this.repoUsers.getByEmail(email);
+            //if (user === null) {
+            //throw error;
+            //}
             // password; // cliente -> sin encriptar
             // user.password; // base de datos -> encriptado
 
