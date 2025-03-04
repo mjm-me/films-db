@@ -42,6 +42,8 @@ export class FilmsController {
     create = async (req: Request, res: Response, next: NextFunction) => {
         debug('create');
         try {
+            FilmCreateDTO.parse(req.body);
+
             const newData = req.body;
             const film = await this.repoFilms.create(newData);
             res.json(this.makeResponse([film]));
