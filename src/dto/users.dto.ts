@@ -8,7 +8,7 @@ import { z } from 'zod';
 //objetos de validación de zod DTO
 export const UserCreateDTO = z.object({
     email: z.string().min(3).nonempty(),
-    handleName: z.string().min(3),
+    handleName: z.string().min(3).optional(),
     password: z.string().min(6).nonempty(),
     firstName: z.string().min(3).nonempty(),
     lastName: z.string().min(3).nonempty(),
