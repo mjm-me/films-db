@@ -1,4 +1,5 @@
 import createDebug from 'debug';
+import { FilmCreateDTO } from '../dto/films.dto.js';
 const debug = createDebug('films:controllers:films');
 export class FilmsController {
     repoFilms;
@@ -37,6 +38,7 @@ export class FilmsController {
     create = async (req, res, next) => {
         debug('create');
         try {
+            FilmCreateDTO.parse(req.body);
             const newData = req.body;
             const film = await this.repoFilms.create(newData);
             res.json(this.makeResponse([film]));
@@ -50,6 +52,7 @@ export class FilmsController {
         try {
             const { id } = req.params;
             const newData = req.body;
+            FilmCreateDTO.partial().parse(req.body);
             const film = await this.repoFilms.update(id, newData);
             res.json(this.makeResponse([film]));
         }

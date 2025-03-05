@@ -8,7 +8,7 @@ export class UsersRepo {
         this.prisma = new PrismaClient();
     }
     async getByEmail(email) {
-        debug('Getting user by email');
+        debug('Getting user by email:', email);
         const user = await this.prisma.user.findUnique({
             where: {
                 email,

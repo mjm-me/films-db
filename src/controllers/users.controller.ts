@@ -75,15 +75,20 @@ export class UsersController {
             const token = await AuthService.generateToken({
                 id: userWithoutPasswd.id,
                 email: userWithoutPasswd.email,
+                role: userWithoutPasswd.role,
             });
 
-            const response = {
-                ...userWithoutPasswd,
+            const results = {
                 token,
             };
 
             res.cookie('token', token);
-            res.json(this.makeResponse([response]));
+            res.json([
+                {
+                    results,
+                    error: '',
+                },
+            ]);
         } catch (error) {
             next(error);
         }

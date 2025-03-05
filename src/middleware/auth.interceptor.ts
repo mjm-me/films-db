@@ -28,7 +28,9 @@ export class AuthInterceptor {
 
         const token = authorization.split(' ')[1];
         try {
+            // const payload =
             await AuthService.verifyToken(token);
+            // req.session.save = payload;
             next();
         } catch (err) {
             const newError = new HttpError(

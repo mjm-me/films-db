@@ -1,11 +1,12 @@
 import createDebug from 'debug';
 import { AuthService } from '../services/auth.service.js';
 import { HttpError } from '../types/http-error.js';
+import { UserCreateDTO, UserLoginDTO } from '../dto/users.dto.js';
 const debug = createDebug('films:controllers:users');
 export class UsersController {
-    repoFilms;
-    constructor(repoFilms) {
-        this.repoFilms = repoFilms;
+    repoUsers;
+    constructor(repoUsers) {
+        this.repoUsers = repoUsers;
         debug('Instanciando');
     }
     makeResponse(results) {
@@ -15,23 +16,34 @@ export class UsersController {
         };
         return data;
     }
-    create = async (req, res, next) => {
+    async create(req, res, next) {
         debug('create');
         try {
             const newData = req.body;
+            UserCreateDTO.parse(newData);
             newData.password = await AuthService.hashPassword(newData.password);
-            const user = await this.repoFilms.create(newData);
+            const user = await this.repoUsers.create(newData);
             res.json(this.makeResponse([user]));
         }
         catch (error) {
             next(error);
         }
-    };
+    }
     async login(req, res, next) {
         const error = new HttpError('User or password not valid', 401, 'Unauthorized');
         try {
             const { email, password: clientPassword } = req.body;
-            const user = await this.repoFilms.getByEmail(email);
+            // if (!email || !clientPassword) {
+            //     throw error;
+            // }
+            try {
+                UserLoginDTO.parse({ email, password: clientPassword });
+            }
+            catch (err) {
+                error.message = err.message; //.errors[0].message;
+                throw error;
+            }
+            const user = await this.repoUsers.getByEmail(email);
             if (user === null) {
                 throw error;
             }
@@ -42,7 +54,21 @@ export class UsersController {
             if (!isValid) {
                 throw error;
             }
-            res.json(this.makeResponse([userWithoutPasswd]));
+            const token = await AuthService.generateToken({
+                id: userWithoutPasswd.id,
+                email: userWithoutPasswd.email,
+                role: userWithoutPasswd.role,
+            });
+            const results = {
+                token,
+            };
+            res.cookie('token', token);
+            res.json([
+                {
+                    results,
+                    error: '',
+                },
+            ]);
         }
         catch (error) {
             next(error);
