@@ -19,6 +19,8 @@ import { FilmRepo } from './repo/films.repository.js';
 import { FilmsController } from './controllers/films.controller.js';
 import { UsersController } from './controllers/users.controller.js';
 import { AuthInterceptor } from './middleware/auth.interceptor.js';
+import { Payload } from './middleware/auth.interceptor.js';
+
 // import session from 'express-session';
 
 // import { createProductsRouter } from './routers/products.router.js';
@@ -26,6 +28,13 @@ import { AuthInterceptor } from './middleware/auth.interceptor.js';
 
 const debug = createDebug('films:app');
 debug('Loaded module');
+
+// quiere decir que tengo el módulo express que ya existe y quiero que escriba sobre este módulo
+declare module 'express' {
+    interface Request {
+        user?: Payload;
+    }
+}
 
 export const createApp = () => {
     debug('Iniciando App...');

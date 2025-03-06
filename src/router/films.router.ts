@@ -12,7 +12,12 @@ export const createFilmsRouter = (
     debug('Ejecutando createFilmsRouter');
 
     const filmsRouter = Router();
-    filmsRouter.get('/', authInterceptor.authenticate, filmsController.getAll);
+    filmsRouter.get(
+        '/',
+        authInterceptor.authenticate,
+        authInterceptor.isAdmin,
+        filmsController.getAll,
+    );
     filmsRouter.get(
         '/:id',
         authInterceptor.authenticate,
