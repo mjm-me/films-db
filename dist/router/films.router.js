@@ -1,10 +1,11 @@
 import { Router } from 'express';
 import createDebug from 'debug';
+import { Role } from '@prisma/client';
 const debug = createDebug('films:router:films');
 export const createFilmsRouter = (authInterceptor, filmsController) => {
     debug('Ejecutando createFilmsRouter');
     const filmsRouter = Router();
-    filmsRouter.get('/', authInterceptor.authenticate, authInterceptor.isAdmin, filmsController.getAll);
+    filmsRouter.get('/', authInterceptor.authenticate, authInterceptor.hasRole(Role.EDITOR), filmsController.getAll);
     filmsRouter.get('/:id', authInterceptor.authenticate, filmsController.getById);
     filmsRouter.post('/', authInterceptor.authenticate, filmsController.create);
     filmsRouter.patch('/:id', authInterceptor.authenticate, filmsController.update);

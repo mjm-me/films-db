@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { FilmsController } from '../controllers/films.controller.js';
 import createDebug from 'debug';
 import { AuthInterceptor } from '../middleware/auth.interceptor.js';
+import { Role } from '@prisma/client';
 
 const debug = createDebug('films:router:films');
 
@@ -15,7 +16,7 @@ export const createFilmsRouter = (
     filmsRouter.get(
         '/',
         authInterceptor.authenticate,
-        authInterceptor.isAdmin,
+        authInterceptor.hasRole(Role.EDITOR),
         filmsController.getAll,
     );
     filmsRouter.get(

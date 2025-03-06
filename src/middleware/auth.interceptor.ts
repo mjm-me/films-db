@@ -3,6 +3,7 @@ import { AuthService } from '../services/auth.service.js';
 import { HttpError } from '../types/http-error.js';
 import createDebug from 'debug';
 import { Role } from '@prisma/client';
+//  { Role } from '@prisma/client';
 
 const debug = createDebug('films:interceptors:auth');
 
@@ -11,7 +12,7 @@ export class AuthInterceptor {
         debug('Instanciando');
     }
 
-    authenticate = async (req: Request, res: Response, next: NextFunction) => {
+    authenticate = async (req: Request, _res: Response, next: NextFunction) => {
         debug('authenticate');
 
         //req.cookies
@@ -29,10 +30,13 @@ export class AuthInterceptor {
 
         const token = authorization.split(' ')[1];
         try {
-            const Payload = await AuthService.verifyToken(token);
-            // req.session.save = payload;
-            req.user = 'payload';
-            res.locals.user = Payload;
+            const payload = await AuthService.verifyToken(token);
+            // Añado datos a req disponibles para siguientes etapas
+            // Previamente he extendido la interfaz Request en express
+            req.user = payload;
+            // Opcionalmente, añado datos a res.locals
+            // para que estén disponibles en las vistas
+            // res.locals.user = payload;
             next();
         } catch (err) {
             const newError = new HttpError(
@@ -44,38 +48,35 @@ export class AuthInterceptor {
         }
     };
 
-    isAdmin = async (req: Request, _res: Response, next: NextFunction) => {
-        debug('isAdmin');
+    hasRole = (role: Role) => {
+        return (req: Request, _res: Response, next: NextFunction) => {
+            debug('hasRole');
 
-        if (!req.user || req.user.role !== Role.ADMIN) {
-            const newError = new HttpError(
-                'You do not have permission',
-                403,
-                'Forbidden',
-            );
-            next(newError);
-            return;
-        }
+            if (
+                !req.user ||
+                (req.user.role !== role && req.user.role !== Role.ADMIN)
+            ) {
+                const newError = new HttpError(
+                    'You do not have permission',
+                    403,
+                    'Forbidden',
+                );
+                next(newError);
+                return;
+            }
+
+            next();
+        };
     };
 
-    isEditor = async (req: Request, _res: Response, next: NextFunction) => {
-        debug('isEditor');
-
-        if (!req.user || req.user.role === Role.USER) {
-            const newError = new HttpError(
-                'You do not have permission',
-                403,
-                'Forbidden',
-            );
-            next(newError);
-            return;
-        }
-    };
-
-    isOwner = async (req: Request, _res: Response, next: NextFunction) => {
+    isOwnerReview = async (
+        req: Request,
+        _res: Response,
+        next: NextFunction,
+    ) => {
         debug('isOwner');
 
-        if (!req.user || req.user.role === Role.USER) {
+        if (!req.user) {
             const newError = new HttpError(
                 'You do not have permission',
                 403,
@@ -84,5 +85,11 @@ export class AuthInterceptor {
             next(newError);
             return;
         }
+
+        // Item -> req.params.id
+        const { id: reviewId } = req.params;
+        // User -> req.user.id
+        const { id: userId } = req.user;
+        // console.log(itemId, userId);
     };
 }
