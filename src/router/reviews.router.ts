@@ -3,7 +3,7 @@ import { ReviewsController } from '../controllers/reviews.controller.js';
 import createDebug from 'debug';
 import { AuthInterceptor } from '../middleware/auth.interceptor.js';
 
-const debug = createDebug('films:router:reviews');
+const debug = createDebug('movies:router:reviews');
 
 export const createReviewsRouter = (
     authInterceptor: AuthInterceptor,

@@ -2,8 +2,9 @@ import createDebug from 'debug';
 import type { Repository } from './repository.type.js';
 import { PrismaClient } from '@prisma/client';
 import { Film } from '@prisma/client';
+import { FilmCreateDTO } from '../dto/films.dto.js';
 
-const debug = createDebug('films:repository:films');
+const debug = createDebug('movies:repository:films');
 
 export class FilmRepo implements Repository<Film> {
     prisma: PrismaClient;
@@ -31,6 +32,7 @@ export class FilmRepo implements Repository<Film> {
 
     async create(data: Omit<Film, 'id'>): Promise<Film> {
         debug('Creating new film');
+        FilmCreateDTO.parse(data); //aquí ya llamo al obj zod para validar
         const film = await this.prisma.film.create({
             data,
         });

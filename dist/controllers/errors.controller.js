@@ -2,7 +2,7 @@ import createDebug from 'debug';
 import { PrismaClientKnownRequestError, PrismaClientValidationError, } from '@prisma/client/runtime/library.js';
 import { ZodError } from 'zod';
 // import { ErrorPage } from '../views/pages/error-page.js';
-const debug = createDebug('films:errorManager');
+const debug = createDebug('movies:errorManager');
 export const errorManager = (err, _req, res, 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 _next) => {

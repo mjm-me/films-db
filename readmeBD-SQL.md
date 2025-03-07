@@ -1,6 +1,4 @@
-SELECT \* FROM movies.films;
-
-En realidad creo que lo vale es esto:
+## Films
 
 USE movies;
 INSERT INTO films (film_id, updatedAt, description, title, release_year, director, duration, rating, poster)
@@ -33,3 +31,12 @@ VALUES
 ( UUID(), now(), '' , 'The Departed', 2004, 'Martin Scorsese', 151, 8.5, 'https://www.imdb.com/title/tt0407887/'),
 ( UUID(), now(), '' , 'The Prestige', 2007, 'Christopher Nolan', 130, 8.5, 'https://www.imdb.com/title/tt0482571/'),
 ( UUID(), now(), '' , 'The Intouchables', 2010, 'Olivier Nakache, Éric Toledano', 112, 8.5, 'https://www.imdb.com/title/tt1675434/');
+
+## Usuarios
+
+USE movies;
+
+INSERT INTO users (user_id, email, handle_name, password, first_name, last_name, role, updatedAt)
+VALUES
+( UUID(), 'pepeperez@gmail.com' , 'pepin', '1234', 'Pepe', 'Pérez', 'USER', now()),
+( UUID(), 'ernestina@gmail.com', 'erni', 'abc123', 'Ernestina', 'Gómez', 'ADMIN', now());

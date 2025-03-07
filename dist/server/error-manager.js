@@ -1,5 +1,5 @@
 import createDebug from 'debug';
-const debug = createDebug('films:server:errors');
+const debug = createDebug('movies:server:errors');
 export const errorManager = (error, response) => {
     if (!('status' in error)) {
         error = {

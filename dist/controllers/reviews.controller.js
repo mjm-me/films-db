@@ -1,6 +1,6 @@
 import createDebug from 'debug';
-// import { ReviewCreateDTO } from '../dto/reviews.dto.js';
-const debug = createDebug('films:controllers:reviews');
+import { ReviewCreateDTO, ReviewUpdateDTO } from '../dto/reviews.dto.js';
+const debug = createDebug('movies:controller:reviews');
 export class ReviewsController {
     repoReviews;
     constructor(repoReviews) {
@@ -38,8 +38,7 @@ export class ReviewsController {
     create = async (req, res, next) => {
         debug('create');
         try {
-            // ReviewCreateDTO.parse(req.body);
-            // const newData: ReviewCreateDTO = req.body;
+            ReviewCreateDTO.parse(req.body);
             const newData = req.body;
             const review = await this.repoReviews.create(newData);
             res.json(this.makeResponse([review]));
@@ -53,7 +52,7 @@ export class ReviewsController {
         try {
             const { id } = req.params;
             const newData = req.body;
-            // ReviewCreateDTO.partial().parse(req.body);
+            ReviewUpdateDTO.parse(req.body);
             const review = await this.repoReviews.update(id, newData);
             res.json(this.makeResponse([review]));
         }

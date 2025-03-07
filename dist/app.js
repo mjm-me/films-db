@@ -15,9 +15,9 @@ import { FilmsController } from './controllers/films.controller.js';
 import { UsersController } from './controllers/users.controller.js';
 import { AuthInterceptor } from './middleware/auth.interceptor.js';
 import { ReviewsController } from './controllers/reviews.controller.js';
-import { ReviewRepo } from './repo/reviews.repositoty.js';
+import { ReviewRepo } from './repo/reviews.repository.js';
 import { createReviewsRouter } from './router/reviews.router.js';
-const debug = createDebug('films:app');
+const debug = createDebug('movies:app');
 debug('Loaded module');
 export const createApp = () => {
     debug('Iniciando App...');
@@ -35,15 +35,19 @@ export const createApp = () => {
     app.use(bodyParser.urlencoded({ extended: true }));
     app.use(debugLogger('debug-logger'));
     app.use(express.static(publicPath));
+    // Controllers, Repositories... instances
     const authInterceptor = new AuthInterceptor();
-    const repoFilms = new FilmRepo();
-    const filmsController = new FilmsController(repoFilms);
-    const repoReviews = new ReviewRepo();
-    const reviewsController = new ReviewsController(repoReviews);
+    // Films
+    const filmsRepo = new FilmRepo();
+    const filmsController = new FilmsController(filmsRepo);
     const filmsRouter = createFilmsRouter(authInterceptor, filmsController);
-    const repoUsers = new UsersRepo();
-    const usersController = new UsersController(repoUsers);
+    // Users
+    const usersRepo = new UsersRepo();
+    const usersController = new UsersController(usersRepo);
     const usersRouter = createUsersRouter(usersController);
+    // Reviews
+    const reviewsRepo = new ReviewRepo();
+    const reviewsController = new ReviewsController(reviewsRepo);
     const reviewsRouter = createReviewsRouter(authInterceptor, reviewsController);
     // Routes registry
     app.use('/api/films', filmsRouter);

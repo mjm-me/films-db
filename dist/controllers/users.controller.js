@@ -2,7 +2,7 @@ import createDebug from 'debug';
 import { AuthService } from '../services/auth.service.js';
 import { HttpError } from '../types/http-error.js';
 import { UserCreateDTO, UserLoginDTO } from '../dto/users.dto.js';
-const debug = createDebug('films:controllers:users');
+const debug = createDebug('movies:controller:users');
 export class UsersController {
     repoUsers;
     constructor(repoUsers) {

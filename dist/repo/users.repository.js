@@ -1,6 +1,6 @@
 import createDebug from 'debug';
 import { PrismaClient } from '@prisma/client';
-const debug = createDebug('films:repository:users');
+const debug = createDebug('movies:repository:users');
 export class UsersRepo {
     prisma;
     constructor() {

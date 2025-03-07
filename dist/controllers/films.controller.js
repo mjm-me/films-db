@@ -1,6 +1,6 @@
 import createDebug from 'debug';
 import { FilmCreateDTO } from '../dto/films.dto.js';
-const debug = createDebug('films:controllers:films');
+const debug = createDebug('movies:controller:films');
 export class FilmsController {
     repoFilms;
     constructor(repoFilms) {

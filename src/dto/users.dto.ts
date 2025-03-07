@@ -1,23 +1,16 @@
-import { Prisma } from '@prisma/client';
+import { Router } from 'express';
 import createDebug from 'debug';
-const debug = createDebug('films:dto:users');
-debug('Loaded module');
+import { UsersController } from '../controllers/users.controller';
+const debug = createDebug('movies:router:users');
 
-import { z } from 'zod';
-
-export const UserCreateDTO = z.object({
-    email: z.string().email().nonempty(),
-    handleName: z.string().min(3).optional(),
-    password: z.string().min(5).nonempty(),
-    firstName: z.string().min(3).nonempty(),
-    lastName: z.string().min(3).nonempty(),
-}) satisfies z.Schema<Prisma.UserCreateInput>;
-
-export const UserLoginDTO = z.object({
-    email: z.string().email().nonempty(),
-    password: z.string().min(5).nonempty(),
-}) satisfies z.Schema<Pick<Prisma.UserCreateInput, 'email' | 'password'>>;
-
-// extract the inferred type
-export type UserCreateDTO = z.infer<typeof UserCreateDTO>;
-export type UserLoginDTO = z.infer<typeof UserLoginDTO>;
+export const createUsersRouter = (usersController: UsersController) => {
+    debug('Ejecutando createFilmsRouter');
+    const usersRouter = Router();
+    //usersRouter.get('/', usersController.getAll);
+    //usersRouter.get('/:id', usersController.getById);
+    usersRouter.post('/register', usersController.create.bind(usersController));
+    usersRouter.post('/login', usersController.login.bind(usersController));
+    //usersRouter.patch('/:id', usersController.update);
+    //usersRouter.delete('/:id', usersController.delete);
+    return usersRouter;
+};

@@ -1,5 +1,5 @@
 import createDebug from 'debug';
-const debug = createDebug('films:server:listening');
+const debug = createDebug('movies:server:listening');
 export const listenManager = (server) => {
     const addr = server.address();
     if (addr === null)

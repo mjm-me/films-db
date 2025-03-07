@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import createDebug from 'debug';
-const debug = createDebug('films:router:reviews');
+const debug = createDebug('movies:router:reviews');
 export const createReviewsRouter = (authInterceptor, reviewsController) => {
     debug('Ejecutando createReviewsRouter');
     const reviewsRouter = Router();

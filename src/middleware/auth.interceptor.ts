@@ -5,7 +5,7 @@ import createDebug from 'debug';
 import { Role } from '@prisma/client';
 //  { Role } from '@prisma/client';
 
-const debug = createDebug('films:interceptors:auth');
+const debug = createDebug('movies:interceptor:auth');
 
 export class AuthInterceptor {
     constructor() {

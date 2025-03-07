@@ -2,8 +2,9 @@ import createDebug from 'debug';
 import type { Repository } from './repository.type.js';
 import { PrismaClient } from '@prisma/client';
 import { Review } from '@prisma/client';
+import { ReviewCreateDTO } from '../dto/reviews.dto.js';
 
-const debug = createDebug('films:repository:reviews');
+const debug = createDebug('movies:repository:reviews');
 
 export class ReviewRepo implements Repository<Review> {
     prisma: PrismaClient;
@@ -29,7 +30,7 @@ export class ReviewRepo implements Repository<Review> {
         return review;
     }
 
-    async create(data: Omit<Review, 'id'>): Promise<Review> {
+    async create(data: ReviewCreateDTO): Promise<Review> {
         debug('Creating new review');
         const review = await this.prisma.review.create({
             data,
