@@ -36,18 +36,15 @@ export const createApp = () => {
     app.use(debugLogger('debug-logger'));
     app.use(express.static(publicPath));
     // Controllers, Repositories... instances
-    const authInterceptor = new AuthInterceptor();
-    // Films
     const filmsRepo = new FilmRepo();
-    const filmsController = new FilmsController(filmsRepo);
-    const filmsRouter = createFilmsRouter(authInterceptor, filmsController);
-    // Users
     const usersRepo = new UsersRepo();
-    const usersController = new UsersController(usersRepo);
-    const usersRouter = createUsersRouter(usersController);
-    // Reviews
     const reviewsRepo = new ReviewRepo();
+    const authInterceptor = new AuthInterceptor(reviewsRepo);
+    const filmsController = new FilmsController(filmsRepo);
+    const usersController = new UsersController(usersRepo);
     const reviewsController = new ReviewsController(reviewsRepo);
+    const filmsRouter = createFilmsRouter(authInterceptor, filmsController);
+    const usersRouter = createUsersRouter(authInterceptor, usersController);
     const reviewsRouter = createReviewsRouter(authInterceptor, reviewsController);
     // Routes registry
     app.use('/api/films', filmsRouter);

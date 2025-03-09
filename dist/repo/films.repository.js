@@ -1,6 +1,5 @@
 import createDebug from 'debug';
 import { PrismaClient } from '@prisma/client';
-import { FilmCreateDTO } from '../dto/films.dto.js';
 const debug = createDebug('movies:repository:films');
 export class FilmRepo {
     prisma;
@@ -21,9 +20,9 @@ export class FilmRepo {
         });
         return film;
     }
+    // async create(data: Omit<Film, 'id'>): Promise<Film> {
     async create(data) {
         debug('Creating new film');
-        FilmCreateDTO.parse(data); //aquí ya llamo al obj zod para validar
         const film = await this.prisma.film.create({
             data,
         });

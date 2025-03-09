@@ -1,14 +1,15 @@
 import { NextFunction, Request, Response } from 'express';
 import { Review } from '@prisma/client';
-import { Repository } from '../repo/repository.type.js';
+//import { Repository } from '../repo/repository.type.js';
 import { AppResponse } from '../types/app-response.js';
 import createDebug from 'debug';
 import { ReviewCreateDTO, ReviewUpdateDTO } from '../dto/reviews.dto.js';
+import { ReviewRepo } from '../repo/reviews.repository.js';
 
 const debug = createDebug('movies:controller:reviews');
 
 export class ReviewsController {
-    constructor(private repoReviews: Repository<Review>) {
+    constructor(private repoReviews: ReviewRepo) {
         debug('Instanciando');
     }
 
@@ -45,9 +46,10 @@ export class ReviewsController {
         debug('create');
         try {
             ReviewCreateDTO.parse(req.body);
+            req.body.userId = req.user!.id;
 
             const newData: ReviewCreateDTO = req.body;
-            const review = await this.repoReviews.create(newData as Review);
+            const review = await this.repoReviews.create(newData);
             res.json(this.makeResponse([review]));
         } catch (error) {
             next(error);

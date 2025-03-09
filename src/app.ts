@@ -4,7 +4,7 @@ import { resolve } from 'path';
 import morgan from 'morgan';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import { Film, Review } from '@prisma/client';
+import { Film } from '@prisma/client';
 import { debugLogger } from './middleware/debug-logger.js';
 import {
     notFoundController,
@@ -56,21 +56,17 @@ export const createApp = () => {
 
     // Controllers, Repositories... instances
 
-    const authInterceptor = new AuthInterceptor();
-
-    // Films
     const filmsRepo: Repository<Film> = new FilmRepo();
-    const filmsController = new FilmsController(filmsRepo);
-    const filmsRouter = createFilmsRouter(authInterceptor, filmsController);
-
-    // Users
     const usersRepo = new UsersRepo();
-    const usersController = new UsersController(usersRepo);
-    const usersRouter = createUsersRouter(usersController);
+    const reviewsRepo: ReviewRepo = new ReviewRepo();
 
-    // Reviews
-    const reviewsRepo: Repository<Review> = new ReviewRepo();
+    const authInterceptor = new AuthInterceptor(reviewsRepo);
+    const filmsController = new FilmsController(filmsRepo);
+    const usersController = new UsersController(usersRepo);
     const reviewsController = new ReviewsController(reviewsRepo);
+
+    const filmsRouter = createFilmsRouter(authInterceptor, filmsController);
+    const usersRouter = createUsersRouter(authInterceptor, usersController);
     const reviewsRouter = createReviewsRouter(
         authInterceptor,
         reviewsController,

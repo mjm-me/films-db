@@ -1,14 +1,15 @@
-import { Router } from 'express';
 import createDebug from 'debug';
-const debug = createDebug('movies:router:users');
-export const createUsersRouter = (usersController) => {
-    debug('Ejecutando createFilmsRouter');
-    const usersRouter = Router();
-    //usersRouter.get('/', usersController.getAll);
-    //usersRouter.get('/:id', usersController.getById);
-    usersRouter.post('/register', usersController.create.bind(usersController));
-    usersRouter.post('/login', usersController.login.bind(usersController));
-    //usersRouter.patch('/:id', usersController.update);
-    //usersRouter.delete('/:id', usersController.delete);
-    return usersRouter;
-};
+const debug = createDebug('movies:dto:users');
+debug('Loaded module');
+import { z } from 'zod';
+export const UserCreateDTO = z.object({
+    email: z.string().email().nonempty(),
+    handleName: z.string().min(3).optional(),
+    password: z.string().min(5).nonempty(),
+    firstName: z.string().min(3).nonempty(),
+    lastName: z.string().min(3).nonempty(),
+});
+export const UserLoginDTO = z.object({
+    email: z.string().email().nonempty(),
+    password: z.string().min(5).nonempty(),
+});

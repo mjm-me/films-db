@@ -9,7 +9,12 @@ export class ReviewRepo {
     }
     async read() {
         debug('Reading reviews');
-        const reviews = await this.prisma.review.findMany();
+        const reviews = await this.prisma.review.findMany({
+            include: {
+                user: true,
+                film: true,
+            },
+        });
         return reviews;
         // return await this.prisma.review.findMany();
     }
@@ -17,13 +22,28 @@ export class ReviewRepo {
         debug('Reading review with id');
         const review = await this.prisma.review.findUniqueOrThrow({
             where: { id },
+            include: {
+                user: true,
+                film: true,
+            },
         });
         return review;
     }
     async create(data) {
         debug('Creating new review');
+        debug('User:', data.userId);
+        debug('Film:', data.filmId);
         const review = await this.prisma.review.create({
-            data,
+            data: {
+                content: data.content,
+                userRating: data.userRating,
+                user: {
+                    connect: { id: data.userId },
+                },
+                film: {
+                    connect: { id: data.filmId },
+                },
+            },
         });
         return review;
     }

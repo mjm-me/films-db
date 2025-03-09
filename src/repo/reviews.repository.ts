@@ -2,7 +2,7 @@ import createDebug from 'debug';
 import type { Repository } from './repository.type.js';
 import { PrismaClient } from '@prisma/client';
 import { Review } from '@prisma/client';
-import { ReviewCreateDTO } from '../dto/reviews.dto.js';
+import { ReviewCreateDTO, ReviewUpdateDTO } from '../dto/reviews.dto.js';
 
 const debug = createDebug('movies:repository:reviews');
 
@@ -15,7 +15,12 @@ export class ReviewRepo implements Repository<Review> {
 
     async read(): Promise<Review[]> {
         debug('Reading reviews');
-        const reviews = await this.prisma.review.findMany();
+        const reviews = await this.prisma.review.findMany({
+            include: {
+                user: true,
+                film: true,
+            },
+        });
         return reviews;
 
         // return await this.prisma.review.findMany();
@@ -25,6 +30,10 @@ export class ReviewRepo implements Repository<Review> {
         debug('Reading review with id');
         const review = await this.prisma.review.findUniqueOrThrow({
             where: { id },
+            include: {
+                user: true,
+                film: true,
+            },
         });
 
         return review;
@@ -32,19 +41,26 @@ export class ReviewRepo implements Repository<Review> {
 
     async create(data: ReviewCreateDTO): Promise<Review> {
         debug('Creating new review');
+        debug('User:', data.userId);
+        debug('Film:', data.filmId);
         const review = await this.prisma.review.create({
-            data,
+            data: {
+                content: data.content,
+                userRating: data.userRating,
+                user: {
+                    connect: { id: data.userId },
+                },
+                film: {
+                    connect: { id: data.filmId },
+                },
+            },
         });
 
         return review;
     }
 
-    async update(
-        id: string,
-        data: Partial<Omit<Review, 'id'>>,
-    ): Promise<Review> {
+    async update(id: string, data: ReviewUpdateDTO): Promise<Review> {
         debug('Updating review with id:', id);
-
         const review = await this.prisma.review.update({
             where: { id },
             data,
