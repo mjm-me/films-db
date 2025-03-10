@@ -17,6 +17,8 @@ import { AuthInterceptor } from './middleware/auth.interceptor.js';
 import { ReviewsController } from './controllers/reviews.controller.js';
 import { ReviewRepo } from './repo/reviews.repository.js';
 import { createReviewsRouter } from './router/reviews.router.js';
+import { CategoriesController } from './controllers/categories.controller.js';
+import { createCategoriesRouter } from './router/categories.router.js';
 const debug = createDebug('movies:app');
 debug('Loaded module');
 export const createApp = () => {
@@ -39,17 +41,21 @@ export const createApp = () => {
     const filmsRepo = new FilmRepo();
     const usersRepo = new UsersRepo();
     const reviewsRepo = new ReviewRepo();
+    const categoriesRepo = new CategoryRepo();
     const authInterceptor = new AuthInterceptor(reviewsRepo);
     const filmsController = new FilmsController(filmsRepo);
     const usersController = new UsersController(usersRepo);
     const reviewsController = new ReviewsController(reviewsRepo);
+    const categoriesController = new CategoriesController(categoriesRepo);
     const filmsRouter = createFilmsRouter(authInterceptor, filmsController);
     const usersRouter = createUsersRouter(authInterceptor, usersController);
     const reviewsRouter = createReviewsRouter(authInterceptor, reviewsController);
+    const categoriesRouter = createCategoriesRouter(authInterceptor, categoriesController);
     // Routes registry
     app.use('/api/films', filmsRouter);
     app.use('/api/users', usersRouter);
     app.use('/api/reviews', reviewsRouter);
+    app.use('/api/categories', categoriesRouter);
     app.get('*', notFoundController); // 404
     app.use('*', notMethodController); // 405
     app.use(errorManager);

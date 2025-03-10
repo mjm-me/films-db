@@ -23,26 +23,42 @@ export class FilmRepo {
     // async create(data: Omit<Film, 'id'>): Promise<Film> {
     async create(data) {
         debug('Creating new film');
-        const film = await this.prisma.film.create({
-            data,
-        });
-        return film;
-    }
-    async update(id, data) {
-        debug('Updating film with id:', id);
-        const film = await this.prisma.film.update({
-            where: { id },
-            data,
-        });
-        return film;
-    }
-    async delete(id) {
-        debug('Deleting film with id:', id);
-        const film = await this.prisma.film.delete({
-            where: {
-                id,
-            },
-        });
-        return film;
+        const { categories, ...rest } = data;
+        const finalData = {
+            ...rest,
+            categories: 
+            //create: categories?.map((name) => ({name})),
+            connect, categories, map() { }
+        }(bame);
+        ({ name });
     }
 }
+const film = await this.prisma.film.create({
+    data: finalData,
+    include: {
+        categories: {
+            select: name, true: 
+        }
+    }
+});
+return film;
+async;
+update(id, string, data, (Partial));
+Promise < Film > {
+    const: film = await this.prisma.film.update({
+        where: { id },
+        data,
+    }),
+    return: film
+};
+async;
+delete (id);
+string;
+Promise < Film > {
+    const: film = await this.prisma.film.delete({
+        where: {
+            id,
+        },
+    }),
+    return: film
+};

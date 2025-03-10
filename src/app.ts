@@ -23,12 +23,16 @@ import { Payload } from './services/auth.service.js';
 import { ReviewsController } from './controllers/reviews.controller.js';
 import { ReviewRepo } from './repo/reviews.repository.js';
 import { createReviewsRouter } from './router/reviews.router.js';
+import { CategoriesController } from './controllers/categories.controller.js';
+import { createCategoriesRouter } from './router/categories.router.js';
 
 const debug = createDebug('movies:app');
 debug('Loaded module');
 
+//quiero guardar en la req algo que llama al Payload
 declare module 'express' {
     interface Request {
+        //estoy ampliando la interfaz que tiene Express
         user?: Payload;
     }
 }
@@ -59,11 +63,13 @@ export const createApp = () => {
     const filmsRepo: Repository<Film> = new FilmRepo();
     const usersRepo = new UsersRepo();
     const reviewsRepo: ReviewRepo = new ReviewRepo();
+    const categoriesRepo = new CategoryRepo();
 
     const authInterceptor = new AuthInterceptor(reviewsRepo);
     const filmsController = new FilmsController(filmsRepo);
     const usersController = new UsersController(usersRepo);
     const reviewsController = new ReviewsController(reviewsRepo);
+    const categoriesController = new CategoriesController(categoriesRepo);
 
     const filmsRouter = createFilmsRouter(authInterceptor, filmsController);
     const usersRouter = createUsersRouter(authInterceptor, usersController);
@@ -71,11 +77,16 @@ export const createApp = () => {
         authInterceptor,
         reviewsController,
     );
+    const categoriesRouter = createCategoriesRouter(
+        authInterceptor,
+        categoriesController,
+    );
 
     // Routes registry
     app.use('/api/films', filmsRouter);
     app.use('/api/users', usersRouter);
     app.use('/api/reviews', reviewsRouter);
+    app.use('/api/categories', categoriesRouter);
 
     app.get('*', notFoundController); // 404
     app.use('*', notMethodController); // 405

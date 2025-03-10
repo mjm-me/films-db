@@ -60,6 +60,11 @@ export class FilmsController {
             next(error);
         }
     };
+    toggleCategory = async (req, _res, next) => {
+        debug('toggleCategory');
+        const { id, category } = req.params;
+        console.log(id, category);
+    };
     delete = async (req, res, next) => {
         debug('delete');
         try {

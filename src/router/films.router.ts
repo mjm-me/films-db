@@ -21,12 +21,21 @@ export const createFilmsRouter = (
         authInterceptor.hasRole(Role.EDITOR),
         filmsController.create,
     );
+
     filmsRouter.patch(
         '/:id',
         authInterceptor.authenticate,
         authInterceptor.hasRole(Role.EDITOR),
         filmsController.update,
     );
+
+    filmsRouter.patch(
+        '/:id/category/:name',
+        authInterceptor.authenticate,
+        authInterceptor.hasRole(Role.EDITOR),
+        filmsController.toggleCategory,
+    );
+
     filmsRouter.delete(
         '/:id',
         authInterceptor.authenticate,

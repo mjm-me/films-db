@@ -11,8 +11,8 @@ export const createUsersRouter = (authInterceptor, usersController) => {
     usersRouter.get('/:id', authInterceptor.authenticate, authInterceptor.hasRole(Role.ADMIN), usersController.getById.bind(usersController));
     usersRouter.post('/register', usersController.create.bind(usersController));
     usersRouter.post('/login', usersController.login.bind(usersController));
-    usersRouter.patch('/role/:id', authInterceptor.authenticate, authInterceptor.hasRole(Role.ADMIN), usersController.setRole);
-    usersRouter.patch('/:id', authInterceptor.authenticate, authInterceptor.isUser, usersController.update);
-    usersRouter.delete('/:id', authInterceptor.authenticate, authInterceptor.isUser, usersController.delete);
+    usersRouter.patch('/role/:id', authInterceptor.authenticate, authInterceptor.hasRole(Role.ADMIN), usersController.setRole.bind(usersController));
+    usersRouter.patch('/:id', authInterceptor.authenticate, authInterceptor.isUser, usersController.update.bind(usersController));
+    usersRouter.delete('/:id', authInterceptor.authenticate, authInterceptor.isUser, usersController.delete.bind(usersController));
     return usersRouter;
 };

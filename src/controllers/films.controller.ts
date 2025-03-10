@@ -67,6 +67,14 @@ export class FilmsController {
         }
     };
 
+    toggleCategory = async (req: Request, _res: Response, next: NextFunction,
+    ) => {
+        debug('toggleCategory');
+
+        const { id, category } = req.params;
+        console.log(id, category);
+    };
+
     delete = async (req: Request, res: Response, next: NextFunction) => {
         debug('delete');
         try {

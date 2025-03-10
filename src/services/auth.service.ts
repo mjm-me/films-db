@@ -3,6 +3,7 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 
 const SALTS = 10;
 
+//yo quiero tener mi propio interfaz extiendo el payload de mi token y uso el de jkt
 export interface Payload extends JwtPayload {
     id: string;
     email: string;

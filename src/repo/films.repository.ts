@@ -33,8 +33,23 @@ export class FilmRepo implements Repository<Film> {
     // async create(data: Omit<Film, 'id'>): Promise<Film> {
     async create(data: FilmCreateDTO): Promise<Film> {
         debug('Creating new film');
+
+        const { categories, ...rest } = data;
+    const finalData = {
+        ...rest,
+        categories:
+        //create: categories?.map((name) => ({name})),
+        connect: categories?.map((bame) => ({name})),
+    },
+}
+
         const film = await this.prisma.film.create({
-            data,
+            data: finalData,
+            include: {
+                categories: {
+                    select:
+                    name: true};
+            }
         });
 
         return film;
