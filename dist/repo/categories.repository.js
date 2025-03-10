@@ -1,8 +1,6 @@
 import createDebug from 'debug';
-//import type { Repository } from './repository.type.js';
 import { PrismaClient } from '@prisma/client';
 const debug = createDebug('movies:repository:categories');
-//export class CategoryRepo implements Repository<Category> {
 export class CategoryRepo {
     prisma;
     constructor() {
@@ -11,9 +9,8 @@ export class CategoryRepo {
     }
     async read() {
         debug('Reading categories');
-        const category = await this.prisma.category.findMany();
-        return category;
-        // return await this.prisma.film.findMany();
+        const categories = await this.prisma.category.findMany();
+        return categories;
     }
     async readById(id) {
         debug('Reading category with id');

@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import { CategoriesController } from '../controllers/categories.controller.js';
 import createDebug from 'debug';
-import { AuthInterceptor } from '../middleware/auth.interceptor.js';
 import { Role } from '@prisma/client';
+import { AuthInterceptor } from '../middleware/auth.interceptor.js';
+import { CategoriesController } from '../controllers/categories.controller.js';
 
-const debug = createDebug('movies:router:films');
+const debug = createDebug('movies:router:categories');
 
 export const createCategoriesRouter = (
     authInterceptor: AuthInterceptor,
@@ -20,5 +20,6 @@ export const createCategoriesRouter = (
         authInterceptor.hasRole(Role.EDITOR),
         categoriesController.create,
     );
+
     return categoriesRouter;
 };

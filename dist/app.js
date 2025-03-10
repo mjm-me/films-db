@@ -17,6 +17,7 @@ import { AuthInterceptor } from './middleware/auth.interceptor.js';
 import { ReviewsController } from './controllers/reviews.controller.js';
 import { ReviewRepo } from './repo/reviews.repository.js';
 import { createReviewsRouter } from './router/reviews.router.js';
+import { CategoryRepo } from './repo/categories.repository.js';
 import { CategoriesController } from './controllers/categories.controller.js';
 import { createCategoriesRouter } from './router/categories.router.js';
 const debug = createDebug('movies:app');

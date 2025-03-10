@@ -15,7 +15,15 @@ export class FilmRepo implements Repository<Film> {
 
     async read(): Promise<Film[]> {
         debug('Reading films');
-        const films = await this.prisma.film.findMany();
+        const films = await this.prisma.film.findMany({
+            include: {
+                categories: {
+                    select: {
+                        name: true,
+                    },
+                },
+            },
+        });
         return films;
 
         // return await this.prisma.film.findMany();
@@ -25,6 +33,13 @@ export class FilmRepo implements Repository<Film> {
         debug('Reading film with id');
         const film = await this.prisma.film.findUniqueOrThrow({
             where: { id },
+            include: {
+                categories: {
+                    select: {
+                        name: true,
+                    },
+                },
+            },
         });
 
         return film;
@@ -35,21 +50,27 @@ export class FilmRepo implements Repository<Film> {
         debug('Creating new film');
 
         const { categories, ...rest } = data;
-    const finalData = {
-        ...rest,
-        categories:
-        //create: categories?.map((name) => ({name})),
-        connect: categories?.map((bame) => ({name})),
-    },
-}
+        const finalData = {
+            ...rest,
+            categories: {
+                // create: categories?.map((name) => ({ name })),
+                connect: categories?.map((name) => ({ name })),
+                // connectOrCreate: categories?.map((name) => ({
+                //     where: { name },
+                //     create: { name },
+                // })),
+            },
+        };
 
         const film = await this.prisma.film.create({
             data: finalData,
             include: {
                 categories: {
-                    select:
-                    name: true};
-            }
+                    select: {
+                        name: true,
+                    },
+                },
+            },
         });
 
         return film;
@@ -61,6 +82,22 @@ export class FilmRepo implements Repository<Film> {
         const film = await this.prisma.film.update({
             where: { id },
             data,
+        });
+
+        return film;
+    }
+
+    async toggleCategory(id: string, name: string): Promise<Film> {
+        debug('Toggling category for film with id:', id);
+        const film = await this.prisma.film.update({
+            where: { id },
+            data: {
+                categories: {
+                    [name]: {
+                        connect: {},
+                    },
+                },
+            },
         });
 
         return film;

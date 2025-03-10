@@ -2,7 +2,6 @@ import { AuthService } from '../services/auth.service.js';
 import { HttpError } from '../types/http-error.js';
 import createDebug from 'debug';
 import { Role } from '@prisma/client';
-//  { Role } from '@prisma/client';
 const debug = createDebug('movies:interceptor:auth');
 export class AuthInterceptor {
     repoReviews;

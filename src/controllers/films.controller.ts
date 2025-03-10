@@ -1,14 +1,14 @@
 import { NextFunction, Request, Response } from 'express';
 import { Film } from '@prisma/client';
-import { Repository } from '../repo/repository.type.js';
 import { AppResponse } from '../types/app-response';
 import createDebug from 'debug';
 import { FilmCreateDTO } from '../dto/films.dto.js';
+import { FilmRepo } from '../repo/films.repository.js';
 
 const debug = createDebug('movies:controller:films');
 
 export class FilmsController {
-    constructor(private repoFilms: Repository<Film>) {
+    constructor(private repoFilms: FilmRepo) {
         debug('Instanciando');
     }
 
@@ -20,7 +20,7 @@ export class FilmsController {
         return data;
     }
 
-    getAll = async (req: Request, res: Response, next: NextFunction) => {
+    getAll = async (_req: Request, res: Response, next: NextFunction) => {
         debug('getAll');
         try {
             const films = await this.repoFilms.read();
@@ -67,12 +67,20 @@ export class FilmsController {
         }
     };
 
-    toggleCategory = async (req: Request, _res: Response, next: NextFunction,
+    toggleCategory = async (
+        req: Request,
+        res: Response,
+        next: NextFunction,
     ) => {
-        debug('toggleCategory');
-
-        const { id, category } = req.params;
-        console.log(id, category);
+        debug('setCategory');
+        try {
+            const { id, name: category } = req.params;
+            console.log(id, category);
+            const film = await this.repoFilms.toggleCategory(id, category);
+            res.json(this.makeResponse([film]));
+        } catch (error) {
+            next(error);
+        }
     };
 
     delete = async (req: Request, res: Response, next: NextFunction) => {

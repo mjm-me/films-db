@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import createDebug from 'debug';
 import { Role } from '@prisma/client';
-const debug = createDebug('movies:router:films');
+const debug = createDebug('movies:router:categories');
 export const createCategoriesRouter = (authInterceptor, categoriesController) => {
     debug('Ejecutando createCategoriesRouter');
     const categoriesRouter = Router();

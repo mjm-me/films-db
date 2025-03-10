@@ -23,16 +23,15 @@ import { Payload } from './services/auth.service.js';
 import { ReviewsController } from './controllers/reviews.controller.js';
 import { ReviewRepo } from './repo/reviews.repository.js';
 import { createReviewsRouter } from './router/reviews.router.js';
+import { CategoryRepo } from './repo/categories.repository.js';
 import { CategoriesController } from './controllers/categories.controller.js';
 import { createCategoriesRouter } from './router/categories.router.js';
 
 const debug = createDebug('movies:app');
 debug('Loaded module');
 
-//quiero guardar en la req algo que llama al Payload
 declare module 'express' {
     interface Request {
-        //estoy ampliando la interfaz que tiene Express
         user?: Payload;
     }
 }

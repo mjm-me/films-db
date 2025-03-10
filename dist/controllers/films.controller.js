@@ -14,7 +14,7 @@ export class FilmsController {
         };
         return data;
     }
-    getAll = async (req, res, next) => {
+    getAll = async (_req, res, next) => {
         debug('getAll');
         try {
             const films = await this.repoFilms.read();
@@ -60,10 +60,17 @@ export class FilmsController {
             next(error);
         }
     };
-    toggleCategory = async (req, _res, next) => {
-        debug('toggleCategory');
-        const { id, category } = req.params;
-        console.log(id, category);
+    toggleCategory = async (req, res, next) => {
+        debug('setCategory');
+        try {
+            const { id, name: category } = req.params;
+            console.log(id, category);
+            const film = await this.repoFilms.toggleCategory(id, category);
+            res.json(this.makeResponse([film]));
+        }
+        catch (error) {
+            next(error);
+        }
     };
     delete = async (req, res, next) => {
         debug('delete');

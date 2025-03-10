@@ -9,7 +9,15 @@ export class FilmRepo {
     }
     async read() {
         debug('Reading films');
-        const films = await this.prisma.film.findMany();
+        const films = await this.prisma.film.findMany({
+            include: {
+                categories: {
+                    select: {
+                        name: true,
+                    },
+                },
+            },
+        });
         return films;
         // return await this.prisma.film.findMany();
     }
@@ -17,6 +25,13 @@ export class FilmRepo {
         debug('Reading film with id');
         const film = await this.prisma.film.findUniqueOrThrow({
             where: { id },
+            include: {
+                categories: {
+                    select: {
+                        name: true,
+                    },
+                },
+            },
         });
         return film;
     }
@@ -26,39 +41,56 @@ export class FilmRepo {
         const { categories, ...rest } = data;
         const finalData = {
             ...rest,
-            categories: 
-            //create: categories?.map((name) => ({name})),
-            connect, categories, map() { }
-        }(bame);
-        ({ name });
+            categories: {
+                // create: categories?.map((name) => ({ name })),
+                connect: categories?.map((name) => ({ name })),
+                // connectOrCreate: categories?.map((name) => ({
+                //     where: { name },
+                //     create: { name },
+                // })),
+            },
+        };
+        const film = await this.prisma.film.create({
+            data: finalData,
+            include: {
+                categories: {
+                    select: {
+                        name: true,
+                    },
+                },
+            },
+        });
+        return film;
+    }
+    async update(id, data) {
+        debug('Updating film with id:', id);
+        const film = await this.prisma.film.update({
+            where: { id },
+            data,
+        });
+        return film;
+    }
+    async toggleCategory(id, name) {
+        debug('Toggling category for film with id:', id);
+        const film = await this.prisma.film.update({
+            where: { id },
+            data: {
+                categories: {
+                    [name]: {
+                        connect: {},
+                    },
+                },
+            },
+        });
+        return film;
+    }
+    async delete(id) {
+        debug('Deleting film with id:', id);
+        const film = await this.prisma.film.delete({
+            where: {
+                id,
+            },
+        });
+        return film;
     }
 }
-const film = await this.prisma.film.create({
-    data: finalData,
-    include: {
-        categories: {
-            select: name, true: 
-        }
-    }
-});
-return film;
-async;
-update(id, string, data, (Partial));
-Promise < Film > {
-    const: film = await this.prisma.film.update({
-        where: { id },
-        data,
-    }),
-    return: film
-};
-async;
-delete (id);
-string;
-Promise < Film > {
-    const: film = await this.prisma.film.delete({
-        where: {
-            id,
-        },
-    }),
-    return: film
-};

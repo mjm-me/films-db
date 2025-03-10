@@ -4,7 +4,6 @@ import { HttpError } from '../types/http-error.js';
 import createDebug from 'debug';
 import { Role } from '@prisma/client';
 import { ReviewRepo } from '../repo/reviews.repository.js';
-//  { Role } from '@prisma/client';
 
 const debug = createDebug('movies:interceptor:auth');
 

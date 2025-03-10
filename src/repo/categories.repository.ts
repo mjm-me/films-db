@@ -1,12 +1,11 @@
 import createDebug from 'debug';
-//import type { Repository } from './repository.type.js';
 import { PrismaClient } from '@prisma/client';
 import { Category } from '@prisma/client';
+import type { Repository } from './repository.type.js';
 
 const debug = createDebug('movies:repository:categories');
 
-//export class CategoryRepo implements Repository<Category> {
-export class CategoryRepo {
+export class CategoryRepo implements Repository<Category> {
     prisma: PrismaClient;
     constructor() {
         debug('Instanciando');
@@ -15,10 +14,8 @@ export class CategoryRepo {
 
     async read(): Promise<Category[]> {
         debug('Reading categories');
-        const category = await this.prisma.category.findMany();
-        return category;
-
-        // return await this.prisma.film.findMany();
+        const categories = await this.prisma.category.findMany();
+        return categories;
     }
 
     async readById(id: string): Promise<Category> {
@@ -26,7 +23,6 @@ export class CategoryRepo {
         const category = await this.prisma.category.findUniqueOrThrow({
             where: { id },
         });
-
         return category;
     }
 
@@ -36,7 +32,6 @@ export class CategoryRepo {
         const category = await this.prisma.category.create({
             data,
         });
-
         return category;
     }
 
@@ -50,7 +45,6 @@ export class CategoryRepo {
             where: { id },
             data,
         });
-
         return category;
     }
 
@@ -61,7 +55,6 @@ export class CategoryRepo {
                 id,
             },
         });
-
         return category;
     }
 }

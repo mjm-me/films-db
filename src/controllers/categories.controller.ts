@@ -1,11 +1,14 @@
-import { NextFunction, Request, Response } from 'express';
+import createDebug from 'debug';
+
 import { Category } from '@prisma/client';
 import { Repository } from '../repo/repository.type.js';
+
+import { NextFunction, Request, Response } from 'express';
 import { AppResponse } from '../types/app-response';
-import createDebug from 'debug';
+
 //import { FilmCreateDTO } from '../dto/categories.dto.js';
 
-const debug = createDebug('movies:controller:films');
+const debug = createDebug('movies:controller:categories');
 
 export class CategoriesController {
     constructor(private repoCategories: Repository<Category>) {
@@ -33,9 +36,9 @@ export class CategoriesController {
     create = async (req: Request, res: Response, next: NextFunction) => {
         debug('create');
         try {
-            //CategoryCreateDTO.parse(req.body);
+            // CategoryCreateDTO.parse(req.body);
 
-            //const newData: CategoryCreateDTO = req.body;
+            // const newData: CategoryCreateDTO = req.body;
             const newData: Omit<Category, 'id'> = req.body;
             const category = await this.repoCategories.create(newData);
             res.json(this.makeResponse([category]));
