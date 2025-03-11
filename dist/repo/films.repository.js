@@ -72,25 +72,48 @@ export class FilmRepo {
     }
     async toggleCategory(id, name) {
         debug('Toggling category for film with id:', id);
-        const film = await this.prisma.film.update({
+        const { categories } = await this.prisma.film.findUniqueOrThrow({
             where: { id },
-            data: {
+            select: {
                 categories: {
-                    [name]: {
-                        connect: {},
+                    select: {
+                        name: true,
                     },
                 },
             },
         });
-        return film;
-    }
-    async delete(id) {
-        debug('Deleting film with id:', id);
-        const film = await this.prisma.film.delete({
-            where: {
-                id,
-            },
+        const hasCategory = categories.map(item);
+        item.name;
+        includes(name);
+        const film = await this.prisma.film.update({
+            where: { id },
+            data: {
+                categories: hasCategory ? {
+                    disconnect: {
+                        name,
+                    },
+                } : ,
+            }
         });
-        return film;
+        {
+            connect: {
+                name,
+                ;
+            }
+        }
     }
+    include;
 }
+;
+return film;
+async;
+delete (id);
+string;
+Promise < Film > {
+    const: film = await this.prisma.film.delete({
+        where: {
+            id,
+        },
+    }),
+    return: film
+};

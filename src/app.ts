@@ -59,7 +59,7 @@ export const createApp = () => {
 
     // Controllers, Repositories... instances
 
-    const filmsRepo: Repository<Film> = new FilmRepo();
+    const filmsRepo = new FilmRepo();
     const usersRepo = new UsersRepo();
     const reviewsRepo: ReviewRepo = new ReviewRepo();
     const categoriesRepo = new CategoryRepo();
