@@ -100,21 +100,22 @@ export class FilmRepo implements Repository<Film> {
                 },
             },
         });
-        const hasCategory = categories.map(item) => item.name).includes(name);
+        const hasCategory = categories.map((item) => item.name).includes(name);
 
         const film = await this.prisma.film.update({
             where: { id },
             data: {
-                categories: hasCategory? {
-                    disconnect: {
-                        name,
-                    },
-                },
-                : {
-                    connect: {
-                        name,
-                    },                    
-                }
+                categories: hasCategory
+                    ? {
+                          disconnect: {
+                              name,
+                          },
+                      }
+                    : {
+                          connect: {
+                              name,
+                          },
+                      },
             },
             include: {
                 categories: {
