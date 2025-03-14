@@ -1,3 +1,7 @@
+DB_URL="mysql://root:curso@2025@localhost:3306/movies"
+JWT_SECRET="8hbTFDfgv589asd6125437&(/562DÑ;4432)mlRN"
+
+
 # Proyecto de Películas
 
 Este proyecto es un proyecto simple para el curso IFCD0210.
